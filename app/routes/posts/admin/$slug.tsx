@@ -6,8 +6,9 @@ import invariant from "tiny-invariant";
 
 import type { Post } from "~/models/post.server";
 import { getPost } from "~/models/post.server";
+import { Outlet } from "@remix-run/react";
 
-type LoaderData = { post: Post; html: string, params: any };
+type LoaderData = { post: Post; html: string; params: any };
 
 export const loader: LoaderFunction = async ({ params }) => {
   invariant(params.slug, `params.slug is required`);
@@ -21,10 +22,12 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function PostSlug() {
   const { post, html, params } = useLoaderData<LoaderData>();
-  console.log(params);
 
   return (
     <main className="mx-auto max-w-4xl">
+      <main className="col-span-4 md:col-span-3">
+        <Outlet />
+      </main>
       <h1 className="my-6 border-b-2 text-center text-3xl">{post.title}</h1>
       <div dangerouslySetInnerHTML={{ __html: html }} />
     </main>
