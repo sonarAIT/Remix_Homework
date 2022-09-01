@@ -28,7 +28,14 @@ export default function PostAdmin() {
               </li>
             ))}
           </ul>
+          <br />
+          <ul>
+            <Link to="new" className="text-blue-600 underline">
+              Create a New Post
+            </Link>
+          </ul>
         </nav>
+
         <main className="col-span-4 md:col-span-3">
           <Outlet />
         </main>
