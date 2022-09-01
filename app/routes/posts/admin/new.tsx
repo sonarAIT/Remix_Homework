@@ -38,7 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   await createPost({ title, slug, markdown });
 
-  return redirect("/posts/admin");
+  return redirect("/posts/admin/" + slug);
 };
 
 const inputClassName = `w-full rounded border border-gray-500 px-2 py-1 text-lg`;
@@ -47,7 +47,19 @@ export default function NewPost() {
   const errors = useActionData();
 
   const transition = useTransition();
-  const isCreating = Boolean(transition.submission);
+  
+  if (transition.submission) {
+    const formData = Object.fromEntries(transition.submission.formData)
+    const title = formData["title"] as string;
+    const markdown = formData["markdown"] as string;
+
+    return (
+      <main className="mx-auto max-w-4xl">
+        <h1 className="my-6 border-b-2 text-center text-3xl">{title}</h1>
+        <div dangerouslySetInnerHTML={{ __html: markdown }} />
+      </main>
+    )
+  }
 
   return (
     <Form method="post">
@@ -86,10 +98,10 @@ export default function NewPost() {
         <button
           type="submit"
           className="rounded bg-blue-500 py-2 px-4 text-white hover:bg-blue-600 focus:bg-blue-400 disabled:bg-blue-300"
-          disabled={isCreating}
+          disabled={false}
         >
           Create Post
-          {isCreating ? "Creating..." : "Create Post"}
+          {false ? "Creating..." : "Create Post"}
         </button>
       </p>
     </Form>
