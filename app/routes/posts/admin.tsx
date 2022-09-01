@@ -1,14 +1,19 @@
-import type { LoaderFunction } from "@remix-run/node";
+import { LoaderFunction, redirect } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useTransition } from "@remix-run/react";
 
 import { getPosts } from "~/models/post.server";
+import { requireUser } from "~/session.server";
 
 type LoaderData = {
   posts: Awaited<ReturnType<typeof getPosts>>;
 };
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const user = await requireUser(request);
+  if(user.email !== "sonar@sonar.com") {
+    return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+  }
   return json({ posts: await getPosts() });
 };
 
